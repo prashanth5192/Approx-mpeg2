@@ -835,8 +835,35 @@ int dct_type;
     if (Reference_IDCT_Flag)
       Reference_IDCT(ld->block[comp]);
     else
-      Fast_IDCT(ld->block[comp]);
-    
+	{
+      	//Fast_IDCT(ld->block[comp]);
+	if(All_Approx_Flag)
+	 {
+	  Approx_Fast_IDCT(ld->block[comp]);
+	 }
+	else if(B_P_Approx_Flag)
+	 {
+	  if((picture_coding_type==P_TYPE)||(picture_coding_type==B_TYPE))
+		Approx_Fast_IDCT(ld->block[comp]);
+	  else
+		Fast_IDCT(ld->block[comp]);
+	 }
+	else if(B_Approx_Flag)
+	 {
+	  if(picture_coding_type==B_TYPE)
+		Approx_Fast_IDCT(ld->block[comp]);
+	  else
+		Fast_IDCT(ld->block[comp]);
+	 }
+	else if(P_Approx_Flag)
+	 {
+	  if(picture_coding_type==P_TYPE)
+		Approx_Fast_IDCT(ld->block[comp]);
+	  else
+		Fast_IDCT(ld->block[comp]);
+	 }
+
+    	}
     /* ISO/IEC 13818-2 section 7.6.8: Adding prediction and coefficient data */
     Add_Block(comp,bx,by,dct_type,(macroblock_type & MACROBLOCK_INTRA)==0);
   }

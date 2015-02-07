@@ -291,8 +291,12 @@ char *argv[];              /* argument vector */
   {
     printf("\n%s, %s\n",Version,Author);
     printf("Usage:  mpeg2decode {options}\n\
-Options: -b  file  main bitstream (base or spatial enhancement layer)\n\
-         -cn file  conformance report (n: level)\n\
+Options: -z  file  main bitstream (base or spatial enhancement layer)\n\
+        -a	does approximation of all I B and P frames\n\
+	-d	does approximation of B and P frames\n\ 
+	-p	does approxiamtion of p frame\n\
+	-b	does approximation of b frame\n\
+	-cn file  conformance report (n: level)\n\
          -e  file  enhancement layer bitstream (SNR or Data Partitioning)\n\
          -f        store/display interlaced video in frame format\n\
          -g        concatenated file format for substitution method (-x)\n\
@@ -338,16 +342,34 @@ Example:       mpeg2decode -b bitstream.mpg -f -r -o0 rec%%d\n\
       switch(toupper(argv[i][1]))
       {
         /* third character. [2], is the value */
-      case 'B':
+      case 'Z':
         Main_Bitstream_Flag = 1;
 
         if(NextArg || LastArg)
         {
-          printf("ERROR: -b must be followed the main bitstream filename\n");
+          printf("ERROR: -z must be followed the main bitstream filename\n");
 	}
         else
           Main_Bitstream_Filename = argv[++i]; 
 
+        break;
+
+	//Prashanth_code_change_7th_feb
+
+	case 'A':
+        All_Approx_Flag = 1;
+        break;
+
+	case 'D':
+        B_P_Approx_Flag = 1;
+        break;
+
+  	case 'B':
+        B_Approx_Flag = 1;
+        break;
+
+  	case 'P':
+        P_Approx_Flag = 1;
         break;
 
 

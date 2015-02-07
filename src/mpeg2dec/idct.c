@@ -53,6 +53,7 @@
 /* global declarations */
 void Initialize_Fast_IDCT _ANSI_ARGS_((void));
 void Fast_IDCT _ANSI_ARGS_((short *block));
+void Approx_Fast_IDCT _ANSI_ARGS_((short *block));
 
 /* private data */
 static short iclip[1024]; /* clipping table */
@@ -61,6 +62,120 @@ static short *iclp;
 /* private prototypes */
 static void idctrow _ANSI_ARGS_((short *blk));
 static void idctcol _ANSI_ARGS_((short *blk));
+
+static void approx_idctrow _ANSI_ARGS_((short *blk));
+static void approx_idctcol _ANSI_ARGS_((short *blk));
+
+//Approximate IDCT for each ROW
+
+static void approx_idctrow(blk)
+short *blk;
+{
+  int x0, x1, x2, x3, x4, x5, x6, x7, x8;
+
+  /* shortcut */
+  if (!((x1 = blk[4]<<11) | (x2 = blk[6]) | (x3 = blk[2]) |
+        (x4 = blk[1]) | (x5 = blk[7]) | (x6 = blk[5]) | (x7 = blk[3])))
+  {
+    blk[0]=blk[1]=blk[2]=blk[3]=blk[4]=blk[5]=blk[6]=blk[7]=blk[0]<<3;
+    return;
+  }
+
+  x0 = (blk[0]<<11) + 128; /* for proper rounding in the fourth stage */
+
+  /* first stage */
+  x8 = W7*(x4+x5);
+  x4 = x8 + (W1-W7)*x4;
+  x5 = x8 - (W1+W7)*x5;
+  x8 = W3*(x6+x7);
+  x6 = x8 - (W3-W5)*x6;
+  x7 = x8 - (W3+W5)*x7;
+  
+  /* second stage */
+  x8 = x0 + x1;
+  x0 -= x1;
+  x1 = W6*(x3+x2);
+  x2 = x1 - (W2+W6)*x2;
+  x3 = x1 + (W2-W6)*x3;
+  x1 = x4 + x6;
+  x4 -= x6;
+  x6 = x5 + x7;
+  x5 -= x7;
+  
+  /* third stage */
+  x7 = x8 + x3;
+  x8 -= x3;
+  x3 = x0 + x2;
+  x0 -= x2;
+  x2 = (181*(x4+x5)+128)>>8;
+  x4 = (181*(x4-x5)+128)>>8;
+  
+  /* fourth stage */
+  blk[0] = (x7+x1)>>8;
+  blk[1] = (x3+x2)>>8;
+  blk[2] = (x0+x4)>>8;
+  blk[3] = (x8+x6)>>8;
+  blk[4] = (x8-x6)>>8;
+  blk[5] = (x0-x4)>>8;
+  blk[6] = (x3-x2)>>8;
+  blk[7] = (x7-x1)>>8;
+}
+
+/* Approximate column (vertical) IDCT*/
+
+static void approx_idctcol(blk)
+short *blk;
+{
+  int x0, x1, x2, x3, x4, x5, x6, x7, x8;
+
+  /* shortcut */
+  if (!((x1 = (blk[8*4]<<8)) | (x2 = blk[8*6]) | (x3 = blk[8*2]) |
+        (x4 = blk[8*1]) | (x5 = blk[8*7]) | (x6 = blk[8*5]) | (x7 = blk[8*3])))
+  {
+    blk[8*0]=blk[8*1]=blk[8*2]=blk[8*3]=blk[8*4]=blk[8*5]=blk[8*6]=blk[8*7]=
+      iclp[(blk[8*0]+32)>>6];
+    return;
+  }
+
+  x0 = (blk[8*0]<<8) + 8192;
+
+  /* first stage */
+  x8 = W7*(x4+x5) + 4;
+  x4 = (x8+(W1-W7)*x4)>>3;
+  x5 = (x8-(W1+W7)*x5)>>3;
+  x8 = W3*(x6+x7) + 4;
+  x6 = (x8-(W3-W5)*x6)>>3;
+  x7 = (x8-(W3+W5)*x7)>>3;
+  
+  /* second stage */
+  x8 = x0 + x1;
+  x0 -= x1;
+  x1 = W6*(x3+x2) + 4;
+  x2 = (x1-(W2+W6)*x2)>>3;
+  x3 = (x1+(W2-W6)*x3)>>3;
+  x1 = x4 + x6;
+  x4 -= x6;
+  x6 = x5 + x7;
+  x5 -= x7;
+  
+  /* third stage */
+  x7 = x8 + x3;
+  x8 -= x3;
+  x3 = x0 + x2;
+  x0 -= x2;
+  x2 = (181*(x4+x5)+128)>>8;
+  x4 = (181*(x4-x5)+128)>>8;
+  
+  /* fourth stage */
+  blk[8*0] = iclp[(x7+x1)>>14];
+  blk[8*1] = iclp[(x3+x2)>>14];
+  blk[8*2] = iclp[(x0+x4)>>14];
+  blk[8*3] = iclp[(x8+x6)>>14];
+  blk[8*4] = iclp[(x8-x6)>>14];
+  blk[8*5] = iclp[(x0-x4)>>14];
+  blk[8*6] = iclp[(x3-x2)>>14];
+  blk[8*7] = iclp[(x7-x1)>>14];
+}
 
 /* row (horizontal) IDCT
  *
@@ -188,17 +303,33 @@ short *blk;
   blk[8*7] = iclp[(x7-x1)>>14];
 }
 
+
+
 /* two dimensional inverse discrete cosine transform */
 void Fast_IDCT(block)
 short *block;
 {
   int i;
-
   for (i=0; i<8; i++)
     idctrow(block+8*i);
 
   for (i=0; i<8; i++)
     idctcol(block+i);
+}
+
+void Approx_Fast_IDCT(block)
+short *block;
+{
+
+int i;
+//if(!(All_Approx_Flag)||!(B_P_Approx_Flag)||!(B_Approx_Flag)||!(P_Approx_Flag))
+ {
+  for (i=0; i<8; i++)
+    approx_idctrow(block+8*i);
+
+  for (i=0; i<8; i++)
+    approx_idctcol(block+i);
+ }
 }
 
 void Initialize_Fast_IDCT()
