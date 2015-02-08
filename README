@@ -1,15 +1,14 @@
-                          mpeg2encode / mpeg2decode
+                          Approximate mpeg2encode / mpeg2decode
                           =========================
-              MPEG-2 Encoder / Decoder, Version 1.2, July 19, 1996
+              Approximate MPEG-2 Encoder / Decoder, Version 1.2, July 19, 1996
 
-                             Copyright (c) 1996 
+                          Code adapted from 
                         MPEG Software Simulation Group
 
-                     E-mail:   mssg@mpeg.org  (author contact)
-                     Web:      http://www.mpeg.org/MSSG/
-                     FTP:      ftp://ftp.mpeg.org/pub/mpeg/mssg/
+                     E-mail:   prashanth@cse.psu.edu  (author contact)
 
 
+/*********************Retained from the Old README FILE*************************/
 Contents:
 1. Overview
 2. Introduction
