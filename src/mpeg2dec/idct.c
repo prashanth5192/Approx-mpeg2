@@ -109,14 +109,14 @@ static void approx_idctrow(blk)
 	b7=a7;
 
 	//Approximate thrid stage
-	blk[0] = b0+b7;
-	blk[1] = b1+b6;
-	blk[2] = b2+b5;
-	blk[3] = b3+b4;
-	blk[4] = b3-b4;
-	blk[5] = b2-b5;
-	blk[6] = b1-b6;
-	blk[7] = b0-b7; 
+	blk[0] = (b0+b7)>>8;
+	blk[1] = (b1+b6)>>8;
+	blk[2] = (b2+b5)>>8;
+	blk[3] = (b3+b4)>>8;
+	blk[4] = (b3-b4)>>8;
+	blk[5] = (b2-b5)>>8;
+	blk[6] = (b1-b6)>>8;
+	blk[7] = (b0-b7)>>8; 
 
 }
 
@@ -162,17 +162,17 @@ static void approx_idctcol(blk)
 	b6=a6;
 	b7=a7;
 
-	/* third stage 
-	blk[8*0] = iclp[b0+b7];
+	//third stage 
+	blk[8*0] = iclp[(b0+b7)>>14];
 	blk[8*1] = iclp[(b1+b6)>>14];
 	blk[8*2] = iclp[(b2+b5)>>14];
 	blk[8*3] = iclp[(b3+b4)>>14];
 	blk[8*4] = iclp[(b3-b4)>>14];
 	blk[8*5] = iclp[(b2-b5)>>14];
 	blk[8*6] = iclp[(b1-b6)>>14];
-	blk[8*7] = iclp[(b0-b7)>>14];*/
+	blk[8*7] = iclp[(b0-b7)>>14];
 
-	/* third stage shift removed */
+	/* third stage shift removed 
 	blk[8*0] = iclp[(b0+b7)];
 	blk[8*1] = iclp[(b1+b6)];
 	blk[8*2] = iclp[(b2+b5)];
@@ -180,7 +180,7 @@ static void approx_idctcol(blk)
 	blk[8*4] = iclp[(b3-b4)];
 	blk[8*5] = iclp[(b2-b5)];
 	blk[8*6] = iclp[(b1-b6)];
-	blk[8*7] = iclp[(b0-b7)];
+	blk[8*7] = iclp[(b0-b7)];*/
 }
 
 /* row (horizontal) IDCT

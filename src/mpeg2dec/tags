@@ -6,11 +6,15 @@
 !_TAG_PROGRAM_VERSION	5.9~svn20110310	//
 ALL_LAYERS	mpeg2dec.h	118;"	d
 Add_Block	getpic.c	/^static void Add_Block(comp,bx,by,dct_type,addflag)$/;"	f	file:
+All_Approx_Flag	global.h	/^EXTERN int All_Approx_Flag;$/;"	v
+Approx_Fast_IDCT	idct.c	/^void Approx_Fast_IDCT(block)$/;"	f
 Author	global.h	/^EXTERN char Author[]$/;"	v
 BLOCK_LAYER	mpeg2dec.h	116;"	d
 BMBtab0	getvlc.h	/^static VLCtab BMBtab0[16] = {$/;"	v
 BMBtab1	getvlc.h	/^static VLCtab BMBtab1[8] = {$/;"	v
 BOTTOM_FIELD	mpeg2dec.h	65;"	d
+B_Approx_Flag	global.h	/^EXTERN int B_Approx_Flag;$/;"	v
+B_P_Approx_Flag	global.h	/^EXTERN int B_P_Approx_Flag;$/;"	v
 B_TYPE	mpeg2dec.h	60;"	d
 Bfr	global.h	/^  unsigned int Bfr;$/;"	m	struct:layer_data
 Big_Picture_Flag	global.h	/^EXTERN int Big_Picture_Flag;$/;"	v
@@ -188,6 +192,7 @@ PICTURE_TEMPORAL_SCALABLE_EXTENSION_ID	mpeg2dec.h	103;"	d
 PMBtab0	getvlc.h	/^static VLCtab PMBtab0[8] = {$/;"	v
 PMBtab1	getvlc.h	/^static VLCtab PMBtab1[8] = {$/;"	v
 PROFILE_422	mpeg2dec.h	107;"	d
+P_Approx_Flag	global.h	/^EXTERN int P_Approx_Flag;$/;"	v
 P_TYPE	mpeg2dec.h	59;"	d
 Pixel	display.c	/^static unsigned char Pixel[256];$/;"	v	file:
 Print_Bits	mpeg2dec.c	/^void Print_Bits(code,bits,len)$/;"	f
@@ -283,6 +288,8 @@ ZIG_ZAG	mpeg2dec.h	105;"	d
 _ANSI_ARGS_	config.h	34;"	d
 _ANSI_ARGS_	config.h	36;"	d
 alternate_scan	global.h	/^  int alternate_scan;$/;"	m	struct:layer_data
+approx_idctcol	idct.c	/^static void approx_idctcol(blk)$/;"	f	file:
+approx_idctrow	idct.c	/^static void approx_idctrow(blk)$/;"	f	file:
 aspect_ratio_information	global.h	/^EXTERN int aspect_ratio_information;$/;"	v
 auxframe	global.h	/^EXTERN unsigned char *auxframe[3];$/;"	v
 backward_f_code	global.h	/^EXTERN int backward_f_code;$/;"	v
