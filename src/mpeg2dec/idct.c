@@ -328,7 +328,7 @@ void Approx_Fast_IDCT(block)
 {
 
 	int i;
-	printf("Here in Approx_IDCT");
+	//printf("Here in Approx_IDCT");
 	//if(!(All_Approx_Flag)||!(B_P_Approx_Flag)||!(B_Approx_Flag)||!(P_Approx_Flag))
 	{
 		for (i=0; i<8; i++)
